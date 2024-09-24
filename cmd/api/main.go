@@ -3,5 +3,5 @@ package main
 import "log"
 
 func main() {
-	log.Fatal("its")
+	log.Fatal("its work")
 }
