@@ -22,7 +22,6 @@ func main() {
 
 	//server instance initialization !!
 	config := api.NewConfig()
-	//TOML UPDATE
 	_, err := toml.DecodeFile(configPath, config)
 	// дессириализуем содержимое .toml
 	if err != nil {
@@ -33,7 +32,5 @@ func main() {
 	server := api.New(config)
 
 	//server api start
-	if err := server.Start(); err != nil {
-		log.Fatal(err)
-	}
+	log.Fatal(server.Start())
 }
