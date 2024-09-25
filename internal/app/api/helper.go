@@ -4,7 +4,10 @@ import (
 	"awesomeProject/storage"
 	_ "github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
-	"net/http"
+)
+
+var (
+	prefix string = "/api/v1"
 )
 
 // пытаемся отконфигурировать наш API instance (logger)
@@ -18,11 +21,14 @@ func (a *API) configureLoggerField() error {
 
 }
 
-// пытаемся отконфигурировать маршрутизатор (роутер апи )
+// пытаемся отконфигурировать маршрутизатор (router API)
 func (a *API) configureRouterField() {
-	a.router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello ! This is rest api!"))
-	})
+	a.router.HandleFunc(prefix+"/articles", a.GetAllArticles).Methods("GET")
+	a.router.HandleFunc(prefix+"/articles/{id}", a.GetArticleById).Methods("GET")
+	a.router.HandleFunc(prefix+"/articles/{id}", a.DeleteByID).Methods("DELETE")
+	a.router.HandleFunc(prefix+"/articles", a.PostArticle).Methods("POST")
+	a.router.HandleFunc(prefix+"/user/register", a.PostUserRegister).Methods("POST")
+
 }
 
 // пытаемся конфигурировать наше хранилище (storage API)
