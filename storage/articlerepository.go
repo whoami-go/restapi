@@ -12,13 +12,17 @@ type ArticleRepository struct {
 }
 
 var (
-	tableArticle = "article"
+	tableArticle = "articles"
 )
 
 // добавим статью в бд
 func (ar *ArticleRepository) Create(a *models.Article) (*models.Article, error) {
 	query := fmt.Sprintf("INSERT INTO %s (title, author, content) VALUES ($1, $2, $3) RETURNING id", tableArticle)
+	log.Printf("Executing query: %s with values: %s, %s, %s", query, a.Title, a.Author, a.Content)
+
 	if err := ar.storage.db.QueryRow(query, a.Title, a.Author, a.Content).Scan(&a.ID); err != nil {
+		log.Printf("Error while creating article: %v", err) // Логируем ошибку
+
 		return nil, err
 	}
 	return a, nil
@@ -60,7 +64,7 @@ func (ar *ArticleRepository) FindArticleById(id int) (*models.Article, bool, err
 
 // получим все статьи в бд
 func (ar *ArticleRepository) SelectAll() ([]*models.Article, error) {
-	query := fmt.Sprintf("SELECT * FORMAT %s", tableArticle)
+	query := fmt.Sprintf("SELECT * FROM %s", tableArticle)
 	rows, err := ar.storage.db.Query(query)
 	if err != nil {
 		return nil, err
